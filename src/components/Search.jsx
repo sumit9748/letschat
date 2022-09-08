@@ -4,7 +4,7 @@ import { db } from '../firebase';
 import { AuthContext } from '../context/AuthContext';
 import { doc, setDoc } from "firebase/firestore";
 
-const Search = ({ makeChat }) => {
+const Search = () => {
     const [username, setUsername] = useState("")
     const [user, setUser] = useState(null);
     const [err, setErr] = useState("")
@@ -33,7 +33,6 @@ const Search = ({ makeChat }) => {
             currentUser.uid > user.uid
                 ? currentUser.uid + user.uid
                 : user.uid + currentUser.uid;
-        makeChat();
         try {
             const res = await getDoc(doc(db, "chats", combinedId));
 
@@ -41,7 +40,7 @@ const Search = ({ makeChat }) => {
                 //create a chat in chats collection
                 await setDoc(doc(db, "chats", combinedId), { messages: [] });
 
-                //create user chats
+                //update user chats with necessery details
                 await updateDoc(doc(db, "userChats", currentUser.uid), {
                     [combinedId + ".userInfo"]: {
                         uid: user.uid,
